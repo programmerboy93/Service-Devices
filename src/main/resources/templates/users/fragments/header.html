@@ -1,0 +1,18 @@
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
+
+    <span th:text="${#authentication.getPrincipal().getUsername()}"></span>
+
+    <div class="topbar-divider d-none d-sm-block"></div>
+
+
+    <a th:href="@{/panelSettings}">Ustawienia</a>
+
+    <div class="topbar-divider d-none d-sm-block"></div>
+
+    <form th:action="@{/logout}" method="POST">
+        <input class="dropdown-item" type="submit" value="Wyloguj"/>
+    </form>
+
+</nav>
+

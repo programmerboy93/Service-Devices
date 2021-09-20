@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Serwis za rogiem</title>
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+
+</head>
+<body id="page-top">
+
+<div id="wrapper">
+
+    <div th:insert="users/fragments/sideBar.html"></div>
+
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+
+            <div th:insert="users/fragments/header.html"></div>
+
+
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+
+
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+
+                                    <h6 class="m-0 font-weight-bold text-primary">Urządzenia do naprawy</h6>
+
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                            <tr>
+                                                <th>Serwisant</th>
+                                                <th>Marka</th>
+                                                <th>Model</th>
+                                                <th>Numer seryjny</th>
+                                                <th>Data przeglądu</th>
+                                                <th>Ważność przeglądu</th>
+                                                <th>Nazwa sklepu</th>
+                                                <th>Typ urządzenia</th>
+                                                <th>Opis usterki</th>
+                                            </tr>
+                                            </thead>
+                                            <tfoot>
+                                            <tr>
+                                                <th>Serwisant</th>
+                                                <th>Marka</th>
+                                                <th>Model</th>
+                                                <th>Numer seryjny</th>
+                                                <th>Data przeglądu</th>
+                                                <th>Ważność przeglądu</th>
+                                                <th>Nazwa sklepu</th>
+                                                <th>Typ urządzenia</th>
+                                                <th>Opis usterki</th>
+                                            </tr>
+                                            </tfoot>
+                                            <tbody>
+                                            <tr th:each="deviceTo : ${devicesToRepair}">
+
+                                                <td sec:authorize="hasAuthority('ROLE_USER')">
+                                                    <div th:if="${deviceTo.user == null}">
+                                                        <div>
+                                                            <form method="post" th:action="@{/deviceToRepair/addUser}">
+                                                                <input type="hidden" th:value="${deviceTo.id}"
+                                                                       name="id"/>
+                                                                <input type="submit" th:value="Przypisz"/>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+
+                                                    <div th:if="${deviceTo.user != null}">
+                                                        <div th:text="${deviceTo.user?.fullName}"></div>
+                                                    </div>
+                                                </td>
+
+
+                                                <td sec:authorize="hasAuthority('ROLE_ADMIN')">
+
+                                                    <form th:action="@{/deviceToRepair/changeUser}" method="post">
+                                                        <input type="hidden" name="deviceId" th:value="${deviceTo.id}"/>
+
+                                                        <select class="form-control" onchange="this.form.submit()"
+                                                                name="userId">
+                                                            <option th:text="${deviceTo.user?.fullName}"/>
+
+                                                            <option th:each="user1 : ${users}"
+                                                                    th:if="${deviceTo.user?.id != user1.id}"
+                                                                    th:value="${user1.id}"
+                                                                    th:utext="${user1.fullName}"/>
+
+                                                    </form>
+
+                                                    </select></td>
+
+                                                <td th:text="${deviceTo.device.mark}"></td>
+                                                <td th:text="${deviceTo.device.model}"></td>
+                                                <td th:text="${deviceTo.device.serialNumber}"></td>
+                                                <td th:text="${deviceTo.device.lastReview}"></td>
+                                                <td th:text="${deviceTo.device.reviewTo}"></td>
+                                                <td th:text="${deviceTo.device.shop.nameShop}"></td>
+                                                <td th:text="${deviceTo.device.typeDevices.type}"></td>
+                                                <td th:text="${deviceTo.descriptionFault}"></td>
+
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:insert="users/fragments/footer.html"></div>
+    </div>
+
+</div>
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+</body>
+
+</html>

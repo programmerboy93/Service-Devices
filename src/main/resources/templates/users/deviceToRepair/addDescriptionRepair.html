@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Serwis za rogiem</title>
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+    <style>
+        errors {
+            color: red;
+        }
+    </style>
+</head>
+<body id="page-top">
+
+<div id="wrapper">
+
+    <div th:insert="users/fragments/sideBar.html"></div>
+
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+
+            <div th:insert="users/fragments/header.html"></div>
+
+
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <h3 th:text="${msg}"></h3>
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Dodawanie urządzenia do naprawy</h6>
+                                </div>
+                                <div class="card-body">
+
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Marka</th>
+                                            <th>Model</th>
+                                            <th>Numer seryjny</th>
+                                            <th>Data przeglądu</th>
+                                            <th>Ważność przeglądu</th>
+                                            <th>Nazwa sklepu</th>
+                                            <th>Typ urządzenia</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td th:text="${deviceHistoryRepairDto.device.mark}"></td>
+                                            <td th:text="${deviceHistoryRepairDto.device.model}"></td>
+                                            <td th:text="${deviceHistoryRepairDto.device.serialNumber}"></td>
+                                            <td th:text="${deviceHistoryRepairDto.device.lastReview}"></td>
+                                            <td th:text="${deviceHistoryRepairDto.device.reviewTo}"></td>
+                                            <td th:text="${deviceHistoryRepairDto.device.shop.nameShop}"></td>
+                                            <td th:text="${deviceHistoryRepairDto.device.typeDevices.type}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <form class="form-horizontal" th:action="@{/deviceToRepair/addDescriptionRepair}" method="post"
+                                          th:object="${deviceHistoryRepairDto}">
+
+                                        <div class="form-group">
+                                            <div class="col-md-8">
+                                                <select th:field="*{status.id}">
+                                                    <option th:each="status : ${statuses}"
+                                                            th:value="${status.id}"
+                                                            th:utext="${status.name}"></option>
+                                                    <div th:if="${#fields.hasErrors('status')}"
+                                                         th:errorclass="errors" th:errors="*{status}"></div>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                                <input type="hidden" th:value="*{device}" th:field="*{device}">
+                                                <input type="hidden" th:value="*{user}" th:field="*{user}">
+                                                <input type="hidden" th:value="*{idRepair}" th:field="*{idRepair}">
+
+                                        <div class="form-group">
+                                            <div class="col-md-8">
+                                                <label class="col-md-8 control-label">Opis usterki</label>
+                                        <textarea th:field="*{descriptionFault}" class="form-control"
+                                                  name="descriptionRepair" rows="3"
+                                                  placeholder="Opis naprawy" readonly></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-8">
+                                                <label class="col-md-8 control-label">Opis naprawy</label>
+                                        <textarea th:field="*{descriptionRepair}" class="form-control"
+                                                  name="descriptionRepair" rows="3"
+                                                  placeholder="Opis naprawy"></textarea>
+                                                <div th:if="${#fields.hasErrors('descriptionRepair')}"
+                                                     th:errorclass="errors" th:errors="*{descriptionRepair}"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-8">
+                                                <button type="submit" class="btn btn-primary">Zatwierdź</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:insert="users/fragments/footer.html"></div>
+    </div>
+
+</div>
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+</body>
+
+</html>
